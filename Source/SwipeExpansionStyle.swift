@@ -82,7 +82,7 @@ public struct SwipeExpansionStyle {
 
      - returns: The new `SwipeExpansionStyle` instance.
      */
-    public init(target: Target, additionalTriggers: [Trigger] = [], elasticOverscroll: Bool = false, completionAnimation: CompletionAnimation = .bounce, expandAutomatically: Bool = true, minimumDeltaToExpand: CGFloat = 0) {
+    public init(target: Target, additionalTriggers: [Trigger] = [], elasticOverscroll: Bool = false, completionAnimation: CompletionAnimation = .bounce, expandAutomatically: Bool = false, minimumDeltaToExpand: CGFloat = 0) {
         self.target = target
         self.additionalTriggers = additionalTriggers
         self.elasticOverscroll = elasticOverscroll
