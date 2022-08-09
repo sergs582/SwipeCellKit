@@ -64,6 +64,11 @@ public struct SwipeExpansionStyle {
     
     var minimumExpansionTranslation: CGFloat = 8.0
     
+    /// The flag to avoid options being hidden.
+    public let expandAutomatically: Bool
+    
+    public var minimumDeltaToExpand: CGFloat = 0.0
+    
     /**
      Contructs a new `SwipeExpansionStyle` instance.
      
@@ -77,11 +82,13 @@ public struct SwipeExpansionStyle {
 
      - returns: The new `SwipeExpansionStyle` instance.
      */
-    public init(target: Target, additionalTriggers: [Trigger] = [], elasticOverscroll: Bool = false, completionAnimation: CompletionAnimation = .bounce) {
+    public init(target: Target, additionalTriggers: [Trigger] = [], elasticOverscroll: Bool = false, completionAnimation: CompletionAnimation = .bounce, expandAutomatically: Bool = true, minimumDeltaToExpand: CGFloat = 0) {
         self.target = target
         self.additionalTriggers = additionalTriggers
         self.elasticOverscroll = elasticOverscroll
         self.completionAnimation = completionAnimation
+        self.expandAutomatically = expandAutomatically
+        self.minimumDeltaToExpand = minimumDeltaToExpand
     }
     
     func shouldExpand(view: Swipeable, gesture: UIPanGestureRecognizer, in superview: UIView, within frame: CGRect? = nil) -> Bool {
@@ -89,7 +96,10 @@ public struct SwipeExpansionStyle {
         guard abs(gesture.translation(in: gestureView).x) > minimumExpansionTranslation else { return false }
     
         let xDelta = floor(abs(frame?.minX ?? view.frame.minX))
-        if xDelta <= actionsView.preferredWidth {
+        
+        if expandAutomatically {
+            return xDelta > minimumDeltaToExpand
+        } else if xDelta <= actionsView.preferredWidth {
             return false
         } else if xDelta > targetOffset(for: view) {
             return true
